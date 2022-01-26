@@ -15,6 +15,7 @@ module.exports = {
     const { name, message } = req.body
 
     return Message.create({ name, message })
+      .then(message => res.send(message))
       .catch(err => console.log(err))
   }
 }

@@ -26,19 +26,23 @@
 // }
 
 const sendButton = document.querySelector('#send')
+const messages = document.querySelector('#messages')
 
 function addMessages(message) {
-  const messages = document.querySelector('#messages')
+  const h4 = document.createElement('h4')
+  h4.innerHTML = `${message.name}`
 
-  messages.appendChild(`
-      <h4> ${message.name} </h4>
-      <p>  ${message.message} </p>
-  `)
+  const p = document.createElement('p')
+  p.innerHTML = `${message.message}`
+
+  messages.appendChild(h4)
+  messages.appendChild(p)
 }
 
 function getMessage() {
+  messages.innerHTML = ''
   return axios.get('/messages')
-    .then(res => console.log(res))
+    .then(({ data }) => data.forEach(item => addMessages(item)))
 }
 
 function sendMessage(data) {
@@ -52,6 +56,6 @@ sendButton.addEventListener('click', function onSendButtonClicked() {
   const name = document.querySelector('#name').value
   const message = document.querySelector('#message').value
 
-  sendMessage({ name, message })
+  axios.post('/messages', { name, message })
     .then(() => getMessage())
 })
